@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.14.0/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+  <div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <h1 class="navbar-brand">
+      Github Finder
+    <h1>
+    <div class="collapse navbar-collapse">
+   
+    <div class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search"  id="name" onKeyUp="getUser()" placeholder="Usuário" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </div>
+  </div>
+  </nav>
+  <div id="repos">
+    <div class="row">
+          <div class="col-md-12">
+              <div id="repos"></div>
+          </div>
+        </div>
+  </div>
+
+    <script type="text/babel">
+    const client_id = "5c41c6afc48dde855925";
+    const client_secret = "ce4e8c18c6d7fb8e5bf23d4debbecf9a3ffc318a";
+
+      async function getUser() {
+        let user = document.getElementById("name").value;
+       	let template = document.getElementById("repos");
+
+        const profileResponse = await fetch(
+          `https://api.github.com/users/${user}?client_id=${client_id}&client_secret=${client_secret}`
+        );
+        const profile = await profileResponse.json();
+        
+        template.innerHTML = `
+        	<div class="card" style="width: 12rem; margin-top: 50px; border: 0">
+            	<img class="card-img-top" width="80" src="${profile.avatar_url}" alt="Card image cap">
+                <ul class="list-group list-group-flush">
+                	<li class="list-group-item text-center"><h4>${profile.name}</h4></li>
+                	<li class="list-group-item text-center"><h4>Usuário: ${profile.login}</h4></li>
+                    <li class="list-group-item">Repositórios: <span class="badge badge-success float-right">
+                    	${profile.public_repos}
+                    </span></li>
+                    <li class="list-group-item">Seguidores: <span class="badge badge-primary float-right">
+                    	${profile.followers}
+                    </span></li>
+                    <li class="list-group-item">Seguindo:<span class="badge badge-info float-right">
+                    	${profile.following}
+                    </span></li>
+                </ul>
+                <div class="card-body">
+                <a href="${profile.html_url}" target="_blank" class="btn btn-warning btn-block">
+                	Ver Perfil
+                </a>
+                </div>
+            </div>
+        `;
+     }
+    </script>
+  </div>
+  </body> 
+</html>
